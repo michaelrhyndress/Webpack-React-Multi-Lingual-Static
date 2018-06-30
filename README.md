@@ -1,2 +1,2 @@
-# Webpack-React-Multi-Lingual-Static
-Webpack React Multi Lingual Static website project scaffolding
+# Webpack-Multilingual-Static
+Webpack Multilingual Static website project scaffolding
