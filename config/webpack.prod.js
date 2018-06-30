@@ -46,8 +46,8 @@ module.exports = Object.keys(constants.LANGUAGES).map(function(language) {
 						sourceMap: false,
 						uglifyOptions: {
 							compress: {
-								drop_console: false,
-								drop_debugger: false,
+								drop_console: true,
+								drop_debugger: true,
 							}
 						}
 					})
