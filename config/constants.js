@@ -1,7 +1,6 @@
 // Paths
 const PATH = require('path');
 const ROOT = PATH.resolve(__dirname, '..');
-const DEFAULT_LANGUAGE = 'en';
 const PATHS = {
 	dist: PATH.join(ROOT, "dist"),
 	static: PATH.join(ROOT, "static"),
@@ -15,14 +14,12 @@ const PATHS = {
 
 // Internationalization
 var LANGUAGES = {
+	en: require(PATH.join(PATHS.i18n, "en.json")),
 	de: require(PATH.join(PATHS.i18n, "de.json"))
 };
-LANGUAGES[DEFAULT_LANGUAGE] = null; //Skip default
 
 
 exports.PATH = PATH;
 exports.PATHS = PATHS;
 exports.ROOT = ROOT;
-exports.DEFAULT_LANGUAGE = DEFAULT_LANGUAGE;
 exports.LANGUAGES = LANGUAGES;
-

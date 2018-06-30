@@ -1,6 +1,6 @@
 {
-	"hey there": "Sie da",
-	"My Company": "Meine Firma",
-	"Description": "Beschreibung",
-	"key1, key2, key3": "key1, key2, key3"
+	"translate.greeting": "Sie da",
+	"translate.myCompany": "Meine Firma",
+	"translate.description": "Beschreibung",
+	"translate.keywords": "key1, key2, key3"
 }

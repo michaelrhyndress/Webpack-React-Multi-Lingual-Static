@@ -29,7 +29,11 @@ module.exports = Object.keys(constants.LANGUAGES).map(function(language) {
 				chunkFilename: language + '/[id].[chunkhash].js',
 			},
 			optimization: {
-				runtimeChunk: false,
+				minimize: true,
+				nodeEnv: 'production',
+				sideEffects: true,
+				concatenateModules: true,
+				runtimeChunk: true,
 				splitChunks: {
 					cacheGroups: {
 						commons: {
@@ -53,6 +57,9 @@ module.exports = Object.keys(constants.LANGUAGES).map(function(language) {
 					})
 				]
 			},
+			performance: {
+				assetFilter: assetFilename => !/(\.map$)|(^(main\.|favicon\.))/.test(assetFilename),
+			},
 			plugins: [
 				new CleanWebpackPlugin([constants.PATHS.dist], {
 					root: constants.ROOT
@@ -67,13 +74,19 @@ module.exports = Object.keys(constants.LANGUAGES).map(function(language) {
 					sourceMap: false,
 					chunksSortMode: 'dependency',
 					minify: {
-						collapseWhitespace: true //minify
+						removeComments: true,
+						collapseWhitespace: true,
+						removeRedundantAttributes: true,
+						useShortDoctype: true,
+						removeEmptyAttributes: true,
+						removeStyleLinkTypeAttributes: true,
+						keepClosingSlash: true,
+						minifyJS: true,
+						minifyCSS: true,
+						minifyURLs: true,
 					},
 					hash: true, //Adds querystring to file
 					vars: {
-						title: 'Static-multilingual',
-						description: 'Static multi-lingual site scaffolding',
-						keywords: 'key1,key2',
 						language_direction: helpers.IsRightToLeft(language) ? "rtl" : "ltr",
 						language: language,
 						canonicalTags: Object.keys(constants.LANGUAGES).filter((key) => key !== language).map((key) => { return '<link rel="alternate" hreflang="' + key + '" href="' + constants.PATH.join('../', key, 'index.html') + '" />' })
@@ -81,7 +94,8 @@ module.exports = Object.keys(constants.LANGUAGES).map(function(language) {
 				}),
 				new I18nPlugin(constants.LANGUAGES[language], {
 					functionName: '__',
-					failOnMissing: true
+					failOnMissing: true,
+					hideMessage: false
 				}),
 				new CompressionWebpackPlugin({
 					asset: '[path].gz[query]',
@@ -90,14 +104,23 @@ module.exports = Object.keys(constants.LANGUAGES).map(function(language) {
 					minRatio: 0.8
 				}),
 				new OfflinePlugin({
+					relativePaths: false,
+					publicPath: '../',
+					appShell: '../',
+					excludes: ['.htaccess'],
 					caches: 'all',
 					responseStrategy: 'network-first',
+					safeToUseOptionalCaches: true,
 					ServiceWorker: {
 						navigationPreload: true,
 						events: true
 					},
-					AppCache: false,
-				})
+				}),
+				new webpack.HashedModuleIdsPlugin({
+					hashFunction: 'sha256',
+					hashDigest: 'hex',
+					hashDigestLength: 20,
+				}),
 			]
 		}
 	)

@@ -4,10 +4,10 @@ var constants = require('./constants.js');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const autoprefixer = require('autoprefixer');
-//const OfflinePlugin = require('offline-plugin');
 
 //Common Config
 module.exports = {
+	target: 'web',
 	entry: {
 		index: constants.PATH.join(constants.PATHS.script, "index.js")
 	},
@@ -24,7 +24,10 @@ module.exports = {
 			{
 				test: /\.(html)$/,
 				use: {
-					loader: 'html-loader?interpolate=require'
+					loader: 'html-loader',
+					options: {
+						interpolate: 'require'
+					}
 				}
 			},
 			{
@@ -59,7 +62,7 @@ module.exports = {
 						{
 							loader: 'css-loader',
 							options: {
-								sourceMap: true,
+								sourceMap: false,
 								minimize: {
 									discardComments: {
 										removeAll: true
@@ -71,14 +74,14 @@ module.exports = {
 							loader: 'postcss-loader',
 							options: {
 								plugins: [autoprefixer('last 2 version')],
-								sourceMap: true
+								sourceMap: false
 							}
 						},
 						{
 							loader: 'sass-loader',
 							options: {
 								includePaths: [constants.PATHS.style],
-								sourceMap: true,
+								sourceMap: false,
 								minimize: {
 									discardComments: {
 										removeAll: true
@@ -105,16 +108,42 @@ module.exports = {
 			},
 			{
 				test: /\.(jpe?g|png|gif|svg)$/, //image
-				loader: 'url-loader',
-				query: {
-					name: '[name].[hash].[ext]',
-					limit: 8192
-				}
+				use: [
+					{
+						loader: 'url-loader',
+						query: {
+							name: '[name].[hash].[ext]',
+							limit: 10 * 1024
+						}
+					},
+					{
+						loader: 'image-webpack-loader',
+						options: {
+							mozjpeg: {
+								enabled: false,
+								// NOTE: mozjpeg is disabled as it causes errors in some Linux environments
+								// Try enabling it in your environment by switching the config to:
+								// enabled: true,
+								// progressive: true,
+							},
+							gifsicle: {
+								interlaced: false,
+							},
+							optipng: {
+								optimizationLevel: 7,
+							},
+							pngquant: {
+								quality: '65-90',
+								speed: 4,
+							},
+						},
+					},
+				],
 			}
 		]
 	},
 	resolve: {
-		modules: ['node_modules', 'styles'],
+		modules: ['node_modules', 'index'],
 		extensions: ['.js', '.jsx'],
 		alias: {
 			Styles: constants.PATHS.style,
@@ -123,9 +152,14 @@ module.exports = {
 		}
 	},
 	plugins: [
+		new webpack.DefinePlugin({
+			'process.env': {
+				NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+			},
+		}),
 		new ExtractTextPlugin({
 			filename: '[name].css', //[name].[md5:contenthash:hex:20].css (hash added by HtmlWebpackPlugin)
-			allChunks: false,
+			allChunks: true,
 		}),
-	]
+	],
 }
