@@ -23,4 +23,3 @@ exports.PATH = PATH;
 exports.PATHS = PATHS;
 exports.ROOT = ROOT;
 exports.LANGUAGES = LANGUAGES;
-exports.DEFAULT_LANGUAGE = 'en'
