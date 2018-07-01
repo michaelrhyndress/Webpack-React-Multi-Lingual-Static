@@ -18,9 +18,9 @@ module.exports = Object.keys(constants.LANGUAGES).map(function(language) {
 		name: language,
 		output: {
 			path: constants.PATHS.dist,
-			publicPath: '../',
-			filename:  language + '/[name].js', //[name]-[hash].js (hash added by HtmlWebpackPlugin)
-			chunkFilename: language + '/[id].[chunkhash].js',
+			publicPath: "../",
+			filename: constants.PATH.join(language, '[name].js'), //[name]-[hash].js
+			chunkFilename: constants.PATH.join(language, '[id].[chunkhash].js'),
 		},
 		optimization: {
 		    minimize: false,
@@ -41,10 +41,10 @@ module.exports = Object.keys(constants.LANGUAGES).map(function(language) {
 					canonicalTags: Object.keys(constants.LANGUAGES).filter((key) => key !== language).map((key) => { return '<link rel="alternate" hreflang="' + key + '" href="' + constants.PATH.join('../', key, 'index.html') + '" />' })
 				}
 			}),
-			new CircularDependencyPlugin({
-				exclude: /a\.js|node_modules/, // exclude node_modules
-				failOnError: false, // show a warning when there is a circular dependency
-			}),
+			// new CircularDependencyPlugin({
+			// 	exclude: /a\.js|node_modules/, // exclude node_modules
+			// 	failOnError: false, // show a warning when there is a circular dependency
+			// }),
 			new I18nPlugin(constants.LANGUAGES[language], {
 				functionName: '__',
 				failOnMissing: true,
@@ -57,7 +57,8 @@ module.exports = Object.keys(constants.LANGUAGES).map(function(language) {
 			historyApiFallback: true,
 			inline: true,
 			hot: true,
-			contentBase: constants.PATHS.dist
+			contentBase: constants.PATHS.dist,
+			publicPath: "/",
 		}
 	});
 });
