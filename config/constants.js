@@ -1,8 +1,7 @@
 // Paths
 const PATH = require('path');
 const ROOT = PATH.resolve(__dirname, '..');
-
-exports.PATHS = {
+const PATHS = {
 	dist: PATH.join(ROOT, "dist"),
 	static: PATH.join(ROOT, "static"),
 	script: PATH.join(ROOT, "static", "js"),
@@ -13,12 +12,13 @@ exports.PATHS = {
 };
 
 
+exports.PATH = PATH;
+exports.ROOT = ROOT;
+exports.PATHS = PATHS;
+
+
 // Internationalization
 exports.LANGUAGES = {
 	en: require(PATH.join(PATHS.i18n, "en.json")),
 	de: require(PATH.join(PATHS.i18n, "de.json"))
 };
-
-
-exports.PATH = PATH;
-exports.ROOT = ROOT;
